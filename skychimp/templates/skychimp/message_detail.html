@@ -1,0 +1,23 @@
+{% extends 'skychimp/base.html' %}
+{% block content %}
+    <div class="col-12 my-5"></div>
+    <div class="col-md-12">
+        <div class="card md-4">
+            <div class="card-body text-center text-white bg-dark">
+                <p class="card-text">
+                    {{ object.subject }}
+                    <br>{{ object.body }}
+                    <br>{{ object.mailing_setting }}
+                </p>
+                    <div class="justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="{% url 'skychimp:message-edit' object.pk %}"
+                                class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'skychimp:message-delete' object.pk %}"
+                                class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock %}

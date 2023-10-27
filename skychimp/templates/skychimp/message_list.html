@@ -1,0 +1,27 @@
+{% extends 'skychimp/base.html' %}
+{% block content %}
+    <div class="col-12 my-5">
+        <a class="btn btn-outline-primary" href="{% url 'skychimp:message-create' %}">Добавить сообщение</a>
+    </div>
+    {% for object in message_list %}
+        <div class="col-md-4">
+            <div class="card md-4 box-shadow">
+                <div class="card-body text-center text-white bg-dark">
+                    <p class="card-text">
+                        {{ object.subject }}
+                    </p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <a href="{% url 'skychimp:message-view' object.pk %}"
+                                class="btn btn-sm btn-outline-secondary">View</a>
+                            <a href="{% url 'skychimp:message-edit' object.pk %}"
+                                class="btn btn-sm btn-outline-secondary">Edit</a>
+                            <a href="{% url 'skychimp:message-delete' object.pk %}"
+                                class="btn btn-sm btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
