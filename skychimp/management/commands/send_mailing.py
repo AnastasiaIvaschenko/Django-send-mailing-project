@@ -1,20 +1,33 @@
-from django.core.mail import send_mail
-from django.core.management.base import BaseCommand
+from django.core.management import BaseCommand
 
-from config.settings import EMAIL_HOST_USER
-# from skychimp.services import MailingManager
+from skychimp.services1 import send_mailing
 
 
 class Command(BaseCommand):
-    help = 'Send mailing messages'
 
     def handle(self, *args, **options):
-        # mailing_manager = MailingManager()
-        # mailing_manager.send_messages()
-        send_mail(
-            subject='test',
-            message='test',
-            from_email=EMAIL_HOST_USER,
-            recipient_list=['ivashch84@yandex.ru']
+        send_mailing()
 
-        )
+# from apscheduler.schedulers.background import BackgroundScheduler
+#
+# # Создаем экземпляр планировщика задач
+# scheduler = BackgroundScheduler()
+#
+# # Определяем функцию, которая будет вызываться планировщиком для выполнения отправки рассылок
+# def send_mailings_job():
+#     mailing_manager.send_mailings()
+#
+# # Запускаем задачу отправки рассылок по расписанию
+# scheduler.add_job(send_mailings_job, 'interval', hours=1)  # Например, отправка каждый час
+#
+# # Запускаем планировщик
+# scheduler.start()
+
+        # send_mail(
+        #         subject='Вы сменили пароль',
+        #         message=f'Ваш новый пароль 12345',
+        #         from_email=EMAIL_HOST_USER,
+        #         recipient_list=['anivasch@mail.ru'],
+        #         fail_silently=False,
+        # )
+

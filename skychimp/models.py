@@ -4,6 +4,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Client(models.Model):
+    mailing_setting = models.ManyToManyField('MailingSetting', related_name='mailing_setting')
     email = models.EmailField(max_length=100, verbose_name='Контактный email')
     first_name = models.CharField(**NULLABLE, max_length=100, verbose_name='Имя')
     last_name = models.CharField(**NULLABLE, max_length=100, verbose_name='Фамилия')
@@ -19,10 +20,7 @@ class Client(models.Model):
 
 
 class MailingSetting(models.Model):
-    TIME_CHOICES = (
-        ('09:00', '09:00'),
-        ('18:00', '18:00'),
-    )
+
     FREQUENCY_CHOICES = (
         ('D', 'Раз в день'),
         ('W', 'Раз в неделю'),
@@ -33,15 +31,17 @@ class MailingSetting(models.Model):
         ('N', 'Создана'),
         ('R', 'Запущена'),
     )
-    clients = models.ManyToManyField(Client, through='Subscription', related_name='mailingsetting')
-    time_start = models.CharField(**NULLABLE, max_length=5, choices=TIME_CHOICES, verbose_name='Время начала')
-    time_end = models.CharField(**NULLABLE, max_length=5, choices=TIME_CHOICES, verbose_name='Время окончания')
+
+    clients = models.ManyToManyField('Client', related_name='mailing_settings')
+    time_start = models.DateTimeField(verbose_name='Время начала', **NULLABLE)
+    time_end = models.DateTimeField(verbose_name='Время окончания', **NULLABLE)
     frequency = models.CharField(max_length=1, choices=FREQUENCY_CHOICES, verbose_name='Периодичность')
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, verbose_name='Статус рассылки')
-
+    message = models.ForeignKey('Message', related_name='mailing_settings', on_delete=models.CASCADE, **NULLABLE)
+    time_last_mailing = models.DateTimeField(**NULLABLE, verbose_name='Дата и Время последней рассылки')
 
     def __str__(self):
-        return f' Рассылка в {self.time_start} {self.frequency} ({self.get_status_display()})'
+        return f' Рассылка в {self.time_start} {self.message} {self.frequency} ({self.get_status_display()})'
 
     class Meta:
         verbose_name = 'настройка рассылки'
@@ -49,7 +49,6 @@ class MailingSetting(models.Model):
 
 
 class Message(models.Model):
-    mailing_setting = models.ForeignKey(MailingSetting, related_name='messages', on_delete=models.CASCADE)
     subject = models.CharField(max_length=200, verbose_name='Тема сообщения')
     body = models.TextField(verbose_name='Тело сообщения')
 
@@ -62,19 +61,14 @@ class Message(models.Model):
 
 
 class MailingLog(models.Model):
-
     STATUS_CHOICES = (
-        ('C', 'Завершена'),
-        ('N', 'Создана'),
-        ('R', 'Запущена'),
+        ('C', 'Успешно'),
+        ('N', 'Неуспешно'),
     )
-
-    client = models.ForeignKey(Client, on_delete=models.CASCADE, default=None)
     mailing_setting = models.ForeignKey(MailingSetting, related_name='logs', on_delete=models.CASCADE)
     attempt_datetime = models.DateTimeField(verbose_name='Дата и время последней попытки')
     server_response = models.TextField(verbose_name='Ответ почтового сервера', blank=True, null=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)
-
     def __str__(self):
         return f'Лог рассылки для {self.mailing_setting}'
 
@@ -83,14 +77,14 @@ class MailingLog(models.Model):
         verbose_name_plural = 'попытки рассылки'
 
 
-class Subscription(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
-    mailing_setting = models.ForeignKey(MailingSetting, on_delete=models.DO_NOTHING)
-    subscribed_date = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.client} - {self.mailing_setting}'
-
-    class Meta:
-        verbose_name = 'подписка'
-        verbose_name_plural = 'подписки'
+# class Subscription(models.Model):
+#     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
+#     mailing_setting = models.ForeignKey(MailingSetting, on_delete=models.DO_NOTHING)
+#     subscribed_date = models.DateTimeField(auto_now_add=True)
+#
+#     def __str__(self):
+#         return f'{self.client} - {self.mailing_setting}'
+#
+#     class Meta:
+#         verbose_name = 'подписка'
+#         verbose_name_plural = 'подписки'
