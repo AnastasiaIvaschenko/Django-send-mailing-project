@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from dotenv import load_dotenv
 from pathlib import Path
+from config.secrets import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -143,19 +144,10 @@ LOGIN_REDIRECT_URL = '/'
 #LOGIN_URL = '/users/'
 
 
-
-# Настройки для отправки почты через Яндекс
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.yandex.ru'
-# EMAIL_PORT = 465
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'ivashch84@yandex.ru'  # электронной почты Яндекс
-# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # пароль от аккаунта Яндекс
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'iva34enko@gmail.com'  # электронной почты
-EMAIL_HOST_PASSWORD = 'dlfk conj lneu qyer' # пароль от аккаунта
+EMAIL_HOST_USER = EMAIL_HOST_USER  #cообщения будут отправляться c этой электронной почты
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD # пароль от аккаунта

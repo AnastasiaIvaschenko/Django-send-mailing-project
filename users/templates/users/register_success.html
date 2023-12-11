@@ -1,0 +1,9 @@
+{% extends 'skychimp/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h2>Поздравляем с регистрацией!</h2>
+    <p>Вам на почту направлено письмо с ссылкой для активации вашего аккаунта.</p>
+    <a href="{% url 'skychimp:index' %}" class type="btn btn-success">Перейти на главную страницу</a>
+  </div>
+{% endblock %}
