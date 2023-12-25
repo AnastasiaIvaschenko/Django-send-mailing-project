@@ -8,5 +8,7 @@ pillow
 ipython
 python-dotenv~=1.0.0
 
+python-decouple
 
 APScheduler~=3.10.4
+pytz~=2023.3.post1

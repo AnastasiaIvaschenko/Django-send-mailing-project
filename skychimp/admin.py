@@ -24,7 +24,7 @@ class MessageAdmin(admin.ModelAdmin):
 @admin.register(MailingLog)
 class MailingLogAdmin(admin.ModelAdmin):
     list_display = ('pk', 'mailing_setting', 'attempt_datetime', 'status', 'server_response',)
-    list_filter = ('mailing_setting', 'status',)
+    list_filter = ('mailing_setting', 'status', 'clients',)
     search_fields = ('attempt_datetime',)
 
 

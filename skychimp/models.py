@@ -4,7 +4,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Client(models.Model):
-    mailing_setting = models.ManyToManyField('MailingSetting', related_name='mailing_setting')
+    # mailing_setting = models.ManyToManyField('MailingSetting', related_name='mailing_setting')
     email = models.EmailField(max_length=100, verbose_name='Контактный email')
     first_name = models.CharField(**NULLABLE, max_length=100, verbose_name='Имя')
     last_name = models.CharField(**NULLABLE, max_length=100, verbose_name='Фамилия')
@@ -40,6 +40,11 @@ class MailingSetting(models.Model):
     message = models.ForeignKey('Message', related_name='mailing_settings', on_delete=models.CASCADE, **NULLABLE)
     time_last_mailing = models.DateTimeField(**NULLABLE, verbose_name='Дата и Время последней рассылки')
 
+    def set_status(self, status, time_last_mailing):
+        self.time_last_mailing = time_last_mailing
+        self.status = status
+        self.save()
+
     def __str__(self):
         return f' Рассылка в {self.time_start} {self.message} {self.frequency} ({self.get_status_display()})'
 
@@ -66,6 +71,7 @@ class MailingLog(models.Model):
         ('N', 'Неуспешно'),
     )
     mailing_setting = models.ForeignKey(MailingSetting, related_name='logs', on_delete=models.CASCADE)
+    clients = models.ForeignKey(Client, related_name='client', **NULLABLE, on_delete=models.CASCADE)
     attempt_datetime = models.DateTimeField(verbose_name='Дата и время последней попытки')
     server_response = models.TextField(verbose_name='Ответ почтового сервера', blank=True, null=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES)

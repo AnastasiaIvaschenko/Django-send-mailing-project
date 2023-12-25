@@ -9,6 +9,7 @@ from skychimp.forms import ClientForm, MailingSettingForm, MessageForm
 from skychimp.models import Client, MailingSetting, Message, MailingLog
 
 
+
 def index(request):
     context = {
         'object_list': Client.objects.all(),
@@ -17,12 +18,14 @@ def index(request):
     return render(request, 'skychimp/base.html', context)
 
 
+@login_required
 def setting_list(request):
     settings = MailingSetting.objects.all()
     context = {'mailingsetting_list': settings}
     return render(request, 'skychimp/mailingsetting_list.html', context)
 
 
+@login_required
 def message_list(request):
     messages = Message.objects.all()
     context = {'message_list': messages}

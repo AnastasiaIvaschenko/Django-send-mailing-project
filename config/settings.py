@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from dotenv import load_dotenv
 from pathlib import Path
-from config.secrets import EMAIL_HOST_USER, EMAIL_HOST_PASSWORD
+# from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,8 +24,7 @@ load_dotenv(dotenv_path=dot_env)
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+t4scefz=b4g9-aub+&^f(iz+=*%z#yxmj*ncjcdr(n@mmlb)8'
-
+SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -44,6 +43,7 @@ INSTALLED_APPS = [
 
     'skychimp',
     'users',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [
@@ -83,8 +83,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'skychimp',
-        'USER': 'postgres'
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
     }
 }
 
@@ -113,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
@@ -141,7 +141,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LOGOUT_REDIRECT_URL = '/'
 LOGIN_REDIRECT_URL = '/'
-#LOGIN_URL = '/users/'
+LOGIN_URL = '/users/'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -149,5 +149,5 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 # EMAIL_USE_SSL = True
-EMAIL_HOST_USER = EMAIL_HOST_USER  #cообщения будут отправляться c этой электронной почты
-EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD # пароль от аккаунта
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  #cообщения будут отправляться c этой электронной почты
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') # пароль от аккаунта

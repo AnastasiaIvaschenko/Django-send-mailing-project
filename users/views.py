@@ -1,5 +1,6 @@
 from random import random
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView as BaseLoginView
 from django.contrib.auth.views import LogoutView as BaseLogoutView
 
@@ -63,7 +64,7 @@ def activate_account(request, activation_token):
         return render(request, 'users/activation_error.html')
 
 
-class UserUpdateView(UpdateView):
+class UserUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserForm
     success_url = reverse_lazy('users:profile')
