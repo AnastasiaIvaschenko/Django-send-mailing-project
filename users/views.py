@@ -71,7 +71,20 @@ class UserUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_object(self, queryset=None):
         return self.request.user
+    #
+    # def get_object(self, queryset=None):
+    #     self.object = super().get_object(queryset)
+    #     if self.object.user != self.request.user and not self.request.user.is_staff:
+    #         raise Http404
+    #     return self.object
 
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     user = self.request.user
+    #     if user.is_staff:
+    #         return queryset
+    #     else:
+    #         return queryset.filter(user=user)
 
 def generate_new_password(request):
     new_password = ''.join([str(random.randint(0, 9) for _ in range(12))])

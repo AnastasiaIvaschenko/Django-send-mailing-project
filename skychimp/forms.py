@@ -11,8 +11,17 @@ class ClientForm(forms.ModelForm):
 
 
 class MailingSettingForm(forms.ModelForm):
-    clients = forms.ModelMultipleChoiceField(queryset=Client.objects.all(), widget=forms.CheckboxSelectMultiple,
-                                             label='Выберите клиентов')
+    # def __init__(self, *args, **kwargs):
+    #     user = kwargs.pop('user')
+    #     super().__init__(*args, **kwargs)
+    #     self.fields['clients'].queryset = Client.objects.filter(created_by=user)
+    clients = forms.ModelMultipleChoiceField(
+        queryset=Client.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        label='Выберите клиентов'
+
+    )
+
 
     class Meta:
         model = MailingSetting
@@ -24,5 +33,5 @@ class MessageForm(forms.ModelForm):
 
     class Meta:
         model = Message
-        fields = ['mailing_setting', 'subject', 'body']
+        fields = '__all__'
 

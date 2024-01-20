@@ -4,21 +4,21 @@ from skychimp.models import Client, MailingSetting, Message, MailingLog#, Subscr
 
 @admin.register(Client)
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'email', 'first_name', 'last_name', 'comment',)
-    search_fields = ('email', 'last_name',)
+    list_display = ('pk', 'email', 'first_name', 'last_name', 'comment', 'user',)
+    search_fields = ('email', 'last_name', 'user',)
 
 
 @admin.register(MailingSetting)
 class MailingSettingAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'time_start', 'time_end', 'frequency', 'status', 'message',)
-    list_filter = ('clients', 'frequency', 'message',)
+    list_display = ('pk', 'time_start', 'time_end', 'frequency', 'status', 'message', 'user',)
+    list_filter = ('clients', 'frequency', 'message', 'user',)
     search_fields = ('status',)
 
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'subject', 'body',)
-    search_fields = ('subject',)
+    list_display = ('pk', 'subject', 'body', 'user',)
+    search_fields = ('subject', 'user',)
 
 
 @admin.register(MailingLog)

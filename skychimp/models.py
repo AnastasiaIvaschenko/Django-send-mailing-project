@@ -1,10 +1,12 @@
 from django.db import models
+from users.models import User
+
 
 NULLABLE = {'blank': True, 'null': True}
 
 
 class Client(models.Model):
-    # mailing_setting = models.ManyToManyField('MailingSetting', related_name='mailing_setting')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='clients', **NULLABLE)
     email = models.EmailField(max_length=100, verbose_name='Контактный email')
     first_name = models.CharField(**NULLABLE, max_length=100, verbose_name='Имя')
     last_name = models.CharField(**NULLABLE, max_length=100, verbose_name='Фамилия')
@@ -39,6 +41,7 @@ class MailingSetting(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, verbose_name='Статус рассылки')
     message = models.ForeignKey('Message', related_name='mailing_settings', on_delete=models.CASCADE, **NULLABLE)
     time_last_mailing = models.DateTimeField(**NULLABLE, verbose_name='Дата и Время последней рассылки')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='mailing_settings', **NULLABLE)
 
     def set_status(self, status, time_last_mailing):
         self.time_last_mailing = time_last_mailing
@@ -56,6 +59,7 @@ class MailingSetting(models.Model):
 class Message(models.Model):
     subject = models.CharField(max_length=200, verbose_name='Тема сообщения')
     body = models.TextField(verbose_name='Тело сообщения')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='messages', **NULLABLE)
 
     def __str__(self):
         return self.subject
@@ -81,16 +85,11 @@ class MailingLog(models.Model):
     class Meta:
         verbose_name = 'попытка рассылки'
         verbose_name_plural = 'попытки рассылки'
+        permissions = [
+            (
+                'is_owner',
+                'Can view mailingsettings'
+            )
+        ]
 
 
-# class Subscription(models.Model):
-#     client = models.ForeignKey(Client, on_delete=models.DO_NOTHING)
-#     mailing_setting = models.ForeignKey(MailingSetting, on_delete=models.DO_NOTHING)
-#     subscribed_date = models.DateTimeField(auto_now_add=True)
-#
-#     def __str__(self):
-#         return f'{self.client} - {self.mailing_setting}'
-#
-#     class Meta:
-#         verbose_name = 'подписка'
-#         verbose_name_plural = 'подписки'
